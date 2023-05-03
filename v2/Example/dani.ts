@@ -3,7 +3,7 @@ import NodeCache from 'node-cache'
 import makeWASocket, { AnyMessageContent, delay, DisconnectReason, downloadMediaMessage, fetchLatestBaileysVersion, isJidBroadcast, makeCacheableSignalKeyStore, makeInMemoryStore, useMultiFileAuthState } from '../src'
 import MAIN_LOGGER from '../src/Utils/logger'
 import fs from 'fs'
-import { spawn } from 'child_process'
+import { exec } from 'child_process'
 
 const logger = MAIN_LOGGER.child({})
 logger.level = 'error'
@@ -141,32 +141,42 @@ const startSock = async () => {
                                     });
                                 });
                             }
-                            const tempFilePath = './audiotemp/' + msg.key.id + '.ogg';
-                            fs.writeFileSync(tempFilePath, audioBuffer, { encoding: 'base64' });
+                            const tempFilePath = './audiotemp/' + msg.key.id + '.mp3';
+                            fs.writeFileSync(tempFilePath, audioBuffer); //{ encoding: 'base64' }
 
-                            const proceso = spawn('python3', ['Example/transcribir.py', tempFilePath]);
-                            let bufferBase64 = '';
+                            exec(`whisper ${tempFilePath} --fp16=False --model large-v2`, async (error, stdout, stderr) => {
+                                if (error) {
+                                  console.error(`Error ejecutando el comando: ${error}`);
+                                  return;
+                                }
+                                await sendMessageWTyping({ text: stdout }, msg.key.remoteJid!)
+                                // console.log(`stdout: ${stdout}`);
+                                // console.error(`stderr: ${stderr}`);
+                              });
 
-                            proceso.stdout.on('data', (data) => {
-                                bufferBase64 += data;
-                            });
+                            // const proceso = spawn('python3', ['Example/transcribir.py', tempFilePath]);
+                            // let bufferBase64 = '';
+
+                            // proceso.stdout.on('data', (data) => {
+                            //     bufferBase64 += data;
+                            // });
                     
-                            proceso.stdout.on('end', async () => {
-                                const messageDecode = Buffer.from(bufferBase64, 'base64').toString("utf-8")
-                                await sendMessageWTyping({ text: messageDecode }, msg.key.remoteJid!)
-                            });
+                            // proceso.stdout.on('end', async () => {
+                            //     const messageDecode = Buffer.from(bufferBase64, 'base64').toString("utf-8")
+                            //     await sendMessageWTyping({ text: messageDecode }, msg.key.remoteJid!)
+                            // });
                     
-                            proceso.stderr.on('data', (data) => {
-                                console.error(`Error: ${data}`);
-                            });
+                            // proceso.stderr.on('data', (data) => {
+                            //     console.error(`Error: ${data}`);
+                            // });
                             
-                            proceso.on('close', (code) => {
-                                console.log(`El proceso de Python se cerró con el código ${code}`);
-                            });
+                            // proceso.on('close', (code) => {
+                            //     console.log(`El proceso de Python se cerró con el código ${code}`);
+                            // });
                             
-                            proceso.on('error', (error) => {
-                                console.error(`Error al ejecutar el proceso de Python: ${error}`);
-                            });
+                            // proceso.on('error', (error) => {
+                            //     console.error(`Error al ejecutar el proceso de Python: ${error}`);
+                            // });
 
                             // if(msg.mediaData && msg.mediaData.localPath){
                             //     await sendMessageWTyping({ text: msg.mediaData.localPath.toString() }, msg.key.remoteJid!)
