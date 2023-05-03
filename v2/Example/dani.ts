@@ -144,7 +144,7 @@ const startSock = async () => {
                             const tempFilePath = './audiotemp/' + msg.key.id + '.mp3';
                             fs.writeFileSync(tempFilePath, audioBuffer); //{ encoding: 'base64' }
 
-                            exec(`whisper ${tempFilePath} --language es --fp16=False --model large-v2`, async (error, stdout, stderr) => {
+                            exec(`python3 Example/transcribir.py ${tempFilePath}`, async (error, stdout, stderr) => {
                                 if (error) {
                                   console.error(`Error ejecutando el comando: ${error}`);
                                   return;
