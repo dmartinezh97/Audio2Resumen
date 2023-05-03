@@ -1,10 +1,9 @@
 import whisper
-import warnings
-from numba.core.errors import NumbaDeprecationWarning
+import sys
+import base64
 
-
-warnings.filterwarnings("ignore", category=NumbaDeprecationWarning)
-
-model = whisper.load_model("base")
-result = model.transcribe("audio.ogg")
-print(result["text"])
+audio = sys.argv[1]
+model = whisper.load_model("medium") #medium
+result = model.transcribe(audio, fp16=False)
+texto_en_base64 = base64.b64encode(bytes(result["text"], 'utf-8')).decode("utf-8")
+print(texto_en_base64)
