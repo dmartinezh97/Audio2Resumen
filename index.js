@@ -2,14 +2,13 @@ const fs = require('fs');
 const qrcode = require('qrcode-terminal');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const { spawn } = require('child_process');
-const iconv = require('iconv-lite');
-const { escape, unescape } = require('lodash');
+// const iconv = require('iconv-lite');
 
-iconv.encodingExists('utf8'); // Verifica si la codificación utf8 está disponible
+// iconv.encodingExists('utf8'); // Verifica si la codificación utf8 está disponible
 
-// Establece la codificación de caracteres para la entrada y salida de tu proyecto
-process.stdin.setEncoding('utf8');
-process.stdout.setEncoding('utf8');
+// // Establece la codificación de caracteres para la entrada y salida de tu proyecto
+// process.stdin.setEncoding('utf8');
+// process.stdout.setEncoding('utf8');
 
 const client = new Client({
     authStrategy: new LocalAuth({
