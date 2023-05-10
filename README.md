@@ -1,6 +1,6 @@
-# Baileys Multi
+# Audio2Resumen
 
-Baileys Multi es una aplicación que utiliza la librería [Baileys](https://github.com/adiwajshing/Baileys) para conectarse a WhatsApp Web mediante websockets. Permite la transcripción de mensajes de voz.
+Audio2Resumen es una aplicación que utiliza la librería [Baileys](https://github.com/adiwajshing/Baileys) para conectarse a WhatsApp Web mediante websockets. Permite la transcripción de mensajes de voz.
 
 ## Instalación
 
