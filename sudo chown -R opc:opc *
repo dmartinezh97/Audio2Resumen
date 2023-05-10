@@ -1,0 +1,4 @@
+sudo chown -R opc:opc *
+sudo chmod 7777 *
+
+python3 Example/transcribir.py audiotemp/3A4EC139C37317274CF6.mp3 
